@@ -1,0 +1,25 @@
+function [key1 key2]=encrypt_key(Inpimg,textfile)
+FID = fopen(textfile, 'rb');    %opening text file
+Str = fread(FID, [1, inf], 'char'); %reading text file
+fclose(FID); 
+v=dec2bin(Str);
+[a b]=size(v);
+I=imread(Inpimg);%reading input image
+[m n o]=size(I);
+key1=randi(m,1,a*7);
+key2=randi(n,1,a*7);
+k=1;p=1;
+E=imread(Inpimg);
+for i=1:a
+    for j=1:b
+        ind1=key1(p);
+        ind2=key2(p);
+        s=dec2bin(I(ind1,ind2,k));
+        s(1,end)=v(i,j);
+        E(ind1,ind2,k)=bin2dec(s);
+        p=p+1;
+    end
+end
+imwrite(E,'encryptedimg.png');
+EncImg=imread('encryptedimg.png');
+imshow(E);
